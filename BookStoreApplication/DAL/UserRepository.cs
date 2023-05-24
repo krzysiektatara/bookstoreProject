@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Data;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStoreApplicationAPI.Repositories
+namespace BookStoreApplicationAPI.DAL
 {
     public class UserRepository : IUserRepository
     {
@@ -48,7 +47,7 @@ namespace BookStoreApplicationAPI.Repositories
         public async Task<UserEntity> AddUserAsync(AddUserDto user)
         {
             var a = _context.Users.Add(_mapper.Map<UserEntity>(user));
-           
+
             return a.Entity;
         }
     }

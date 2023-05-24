@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Data;
 using BookStoreApplicationAPI.Data.Enums;
+using BookStoreApplicationAPI.DAL;
 
 namespace BookStoreApplicationAPI.Controllers
 {

@@ -6,7 +6,7 @@ namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
     public interface IProductRepository : IGenericRepository<ProductEntity>
     {
-        Task<ActionResult<ProductEntity>> Geta(int id);
+        Task<ActionResult<ProductEntity>> Get(int id);
 
         Task<IEnumerable<Product>> GetProductsAsync();
 

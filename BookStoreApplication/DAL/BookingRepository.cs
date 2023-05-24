@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Data;
 using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStoreApplicationAPI.Repositories.Interfaces
+namespace BookStoreApplicationAPI.DAL
 {
     public class BookingRepository : IBookingRepository
     {

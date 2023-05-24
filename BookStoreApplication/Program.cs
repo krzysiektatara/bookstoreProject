@@ -5,9 +5,9 @@ using BookStoreApplicationAPI.Infrastructure;
 using BookStoreApplicationAPI.Filters;
 using Microsoft.OpenApi.Models;
 using BookStoreApplicationAPI.Services.Booking;
-using BookStoreApplicationAPI.Repositories;
-using BookStoreApplicationAPI.Repositories.UOW;
 using BookStoreApplicationAPI.Repositories.Interfaces;
+using BookStoreApplicationAPI.DAL;
+using BookStoreApplicationAPI.DAL.UOW;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IUserRepository, UserRepository>();

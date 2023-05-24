@@ -2,15 +2,14 @@
 using AutoMapper.QueryableExtensions;
 using BookStoreApplication.Models;
 using BookStoreApplicationAPI.Controllers;
-using BookStoreApplicationAPI.Data;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStoreApplicationAPI.Repositories
+namespace BookStoreApplicationAPI.DAL
 {
-    public class ProductRepository : GenericRepository<ProductEntity>, IProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly BookStoreDbContext _context;
         private readonly IMapper _mapper;
@@ -37,7 +36,7 @@ namespace BookStoreApplicationAPI.Repositories
             return a.Entity;
         }
 
-        public async Task<ActionResult<ProductEntity>> Geta(int id)
+        public async Task<ActionResult<ProductEntity>> Get(int id)
         {
             var product = await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -104,6 +103,11 @@ namespace BookStoreApplicationAPI.Repositories
 
             _context.Products.Remove(product);
             //await _context.SaveChangesAsync();
+        }
+
+        public Task<ProductEntity> Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

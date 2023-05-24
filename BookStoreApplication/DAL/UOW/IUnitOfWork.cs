@@ -1,6 +1,6 @@
 ﻿using BookStoreApplicationAPI.Repositories.Interfaces;
 
-namespace BookStoreApplicationAPI.Repositories.UOW
+namespace BookStoreApplicationAPI.DAL.UOW
 {
     public interface IUnitOfWork : IDisposable
     {

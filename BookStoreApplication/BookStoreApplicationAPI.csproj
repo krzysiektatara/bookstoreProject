@@ -8,10 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="C:\Users\Krzysztof_Tatara\Desktop\BookStoreDbContext_przed.cs" Link="BookStoreDbContext_przed.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />

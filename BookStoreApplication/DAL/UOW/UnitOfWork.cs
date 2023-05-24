@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using BookStoreApplicationAPI.Data;
+using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using BookStoreApplicationAPI.Services.User;
 
-namespace BookStoreApplicationAPI.Repositories.UOW
+namespace BookStoreApplicationAPI.DAL.UOW
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -23,7 +23,7 @@ namespace BookStoreApplicationAPI.Repositories.UOW
         {
             _context = context;
             Bookings = bookingRepository;
-            Products= productRepository;
+            Products = productRepository;
             Store = storeRepository;
             Users = userRepository;
         }
@@ -35,7 +35,7 @@ namespace BookStoreApplicationAPI.Repositories.UOW
 
         private bool disposed = false;
 
-        
+
 
         protected virtual void Dispose(bool disposing)
         {

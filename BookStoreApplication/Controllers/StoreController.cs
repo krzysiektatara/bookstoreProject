@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookStoreApplicationAPI.Models;
-using BookStoreApplicationAPI.Repositories.UOW;
+using BookStoreApplicationAPI.DAL.UOW;
 
 namespace BookStoreApplicationAPI.Controllers
 {

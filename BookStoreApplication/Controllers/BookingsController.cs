@@ -3,8 +3,7 @@ using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Exceptions;
 using AutoMapper;
 using BookStoreApplicationAPI.Models;
-using BookStoreApplicationAPI.Repositories.UOW;
-using BookStoreApplicationAPI.Repositories;
+using BookStoreApplicationAPI.DAL.UOW;
 
 namespace BookStoreApplicationAPI.Controllers
 {
@@ -34,7 +33,7 @@ namespace BookStoreApplicationAPI.Controllers
         {
             var bookingEntity = await _unitOfWork.Bookings.GetBookingByIdAsync(id);
             if (bookingEntity == null) return NotFound();
-            var product = await _unitOfWork.Products.Geta(bookingEntity.Product_Id);
+            var product = await _unitOfWork.Products.Get(bookingEntity.Product_Id);
 
             var booking = _mapper.Map<BookingEntity, Booking>(bookingEntity);
             booking.Product = product.Value;
@@ -55,7 +54,7 @@ namespace BookStoreApplicationAPI.Controllers
             int userId, [FromBody] BookingRequestDto bookingForm)
         {
             var user = await _unitOfWork.Users.GetUserWithAdressAsync(userId);
-            var product = await _unitOfWork.Products.Geta(bookingForm.Product_Id);
+            var product = await _unitOfWork.Products.Get(bookingForm.Product_Id);
             var storeItem = await _unitOfWork.Store.GetByProductIdAsync(bookingForm.Product_Id);
 
             var isRequestedQty_Available = _bookingLogicService.isRequestetProductAvailable(bookingForm.Requested_qty, storeItem.Available_qty);

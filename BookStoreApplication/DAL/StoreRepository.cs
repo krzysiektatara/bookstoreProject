@@ -1,5 +1,4 @@
 ﻿using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Data;
 using BookStoreApplicationAPI.Exceptions;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Net;
 
-namespace BookStoreApplicationAPI.Repositories
+namespace BookStoreApplicationAPI.DAL
 {
     public class StoreRepository : IStoreRepository
     {

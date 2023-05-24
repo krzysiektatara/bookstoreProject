@@ -7,7 +7,7 @@ using System.Data;
 using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories;
-using BookStoreApplicationAPI.Repositories.UOW;
+using BookStoreApplicationAPI.DAL.UOW;
 
 namespace BookStoreApplication.Controllers
 {

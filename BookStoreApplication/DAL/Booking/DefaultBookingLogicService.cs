@@ -1,4 +1,4 @@
-﻿using BookStoreApplicationAPI.Data;
+﻿using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Services.User;
 using Microsoft.Extensions.Options;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BookStoreApplicationAPI.Exceptions;
 using BookStoreApplicationAPI.Models;
-using BookStoreApplicationAPI.Repositories.UOW;
+using BookStoreApplicationAPI.DAL.UOW;
 
 namespace BookStoreApplicationAPI.Controllers
 {
