@@ -1,23 +1,25 @@
-﻿using BookStoreApplicationAPI.Exceptions;
+﻿
+using BookStoreApplicationAPI.Data.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BookStoreApplicationAPI.Filters
 {
-    public class ExceptionMiddleware
+    public class JsonExceptionFilter : IExceptionFilter
     {
-        private readonly IHostingEnvironment _hostEnvironment;
+        private readonly IHostingEnvironment _env;
 
         public JsonExceptionFilter(IHostingEnvironment env)
         {
-            _hostEnvironment = env;
+            _env = env;
         }
 
         public void OnException(ExceptionContext context)
         {
+           
             var error = new ApiError();
-            if (_hostEnvironment.IsDevelopment())
+            if (_env.IsDevelopment())
             {
                 error.Message = context.Exception.Message;
                 error.Detail = context.Exception.StackTrace;
