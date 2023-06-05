@@ -1,33 +1,16 @@
 ﻿using AutoMapper;
-using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly BookStoreDbContext _context;
-        private readonly IMapper _mapper;
-        public UserRepository(
-            BookStoreDbContext context,
-            IMapper mapper
-            )
+        public UserRepository(BookStoreDbContext context, IMapper mapper, AutoMapper.IConfigurationProvider mappingConfiguration) 
+            : base(context, mapper, mappingConfiguration)
         {
-            _context = context;
-            _mapper = mapper;
-        }
-
-        public async Task<UserEntity> GetUserAsync(int id)
-        {
-
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
-            if (user == null)
-            {
-                return null;
-            }
-            return user;
         }
 
         public async Task<UserAdressDto> GetUserWithAdressAsync(int id)
@@ -44,9 +27,9 @@ namespace BookStoreApplicationAPI.DAL
             };
         }
 
-        public async Task<UserEntity> AddUserAsync(AddUserDto user)
+        public async Task<User> AddUserAsync(AddUserDto user)
         {
-            var a = _context.Users.Add(_mapper.Map<UserEntity>(user));
+            var a = _context.Users.Add(_mapper.Map<User>(user));
 
             return a.Entity;
         }

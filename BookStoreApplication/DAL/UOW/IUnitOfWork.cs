@@ -1,4 +1,6 @@
-﻿using BookStoreApplicationAPI.Repositories.Interfaces;
+﻿using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL.UOW
 {

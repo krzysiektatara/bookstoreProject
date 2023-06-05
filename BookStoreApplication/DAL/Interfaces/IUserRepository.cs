@@ -1,13 +1,12 @@
-﻿using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Models;
+﻿using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.Data.Entities;
 
 namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<User>
     {
-        Task<UserEntity> GetUserAsync(int id);
         Task<UserAdressDto> GetUserWithAdressAsync(int id);
-        Task<UserEntity> AddUserAsync(AddUserDto user);
+        Task<User> AddUserAsync(AddUserDto user);
 
     }
 }

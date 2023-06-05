@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.EntityFrameworkCore;
-using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Data.Enums;
-using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Data.Entities;
 
 namespace BookStoreApplicationAPI.DAL
 {
@@ -16,10 +11,10 @@ namespace BookStoreApplicationAPI.DAL
         {
         }
 
-        public DbSet<ProductEntity> Products { get; set; } = default!;
-        public DbSet<UserEntity> Users { get; set; } = default!;
-        public DbSet<BookingEntity> Bookings { get; set; } = default!;
-        public DbSet<StoreItemEntity> Book_store { get; set; } = default!;
+        public DbSet<Product> Products { get; set; } = default!;
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<Booking> Bookings { get; set; } = default!;
+        public DbSet<StoreItem> Book_store { get; set; } = default!;
 
         public DbSet<Role> Roles { get; set; } = default!;
     }

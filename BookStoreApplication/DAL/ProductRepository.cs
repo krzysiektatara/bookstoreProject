@@ -1,50 +1,23 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BookStoreApplication.Models;
 using BookStoreApplicationAPI.Controllers;
-using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Data.Entities;
+using BookStoreApplicationAPI.Data.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly BookStoreDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly AutoMapper.IConfigurationProvider _mappingConfiguration;
-        public ProductRepository(
-            BookStoreDbContext context,
-            IMapper mapper,
-            AutoMapper.IConfigurationProvider mappingConfiguration
-            )
+
+        public ProductRepository(BookStoreDbContext context, IMapper mapper, AutoMapper.IConfigurationProvider mappingConfiguration) 
+            : base(context, mapper, mappingConfiguration)
         {
-            _context = context;
-            _mapper = mapper;
-            _mappingConfiguration = mappingConfiguration;
         }
 
-        public async Task<ProductEntity> AddProductAsync(AddProductDto product)
-        {
-            var a = _context.Products.Add(_mapper.Map<ProductEntity>(product));
-            //var isSucess = await _context.SaveChangesAsync();
-            //if (isSucess < 1)
-            //{
-            //    throw new Exception("product not added");
-            //}
-            return a.Entity;
-        }
-
-        public async Task<ActionResult<ProductEntity>> Get(int id)
-        {
-            var product = await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
-
-            return product;
-        }
-
-
-        public async Task<ActionResult<Product>> GetProductAsync(int id)
+        public async Task<ActionResult<ProductWithResource>> GetProductAsync(int id)
         {
             var product = await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
 
@@ -52,7 +25,7 @@ namespace BookStoreApplicationAPI.DAL
                 nameof(ProductsController.GetProduct),
                 new { productId = product.Id }
                 );
-            var p = new Product
+            var p = new ProductWithResource
             {
                 Self = link,
                 Id = product.Id,
@@ -66,7 +39,7 @@ namespace BookStoreApplicationAPI.DAL
             return p;
         }
 
-        public async Task<ActionResult<ProductEntity>> GetProductByNameAsync(string name)
+        public async Task<ActionResult<Product>> GetProductByNameAsync(string name)
         {
             var product = await _context.Products.SingleOrDefaultAsync(x => x.Name == name);
 
@@ -74,7 +47,7 @@ namespace BookStoreApplicationAPI.DAL
             {
                 return null;
             }
-            var p = new ProductEntity
+            var p = new Product
             {
                 Id = product.Id,
                 Author = product.Author,
@@ -88,26 +61,12 @@ namespace BookStoreApplicationAPI.DAL
         }
 
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
+        public async Task<IEnumerable<ProductWithResource>> GetProductsAsync()
         {
             var querry = _context.Products.
-                ProjectTo<Product>(_mappingConfiguration);
+                ProjectTo<ProductWithResource>(_mappingConfiguration);
 
             return await querry.ToArrayAsync();
-        }
-
-        public async Task Delete(ProductEntity entity)
-        {
-            var product = _context.Products.SingleOrDefault(x => x.Id == entity.Id);
-            if (product == null) return;
-
-            _context.Products.Remove(product);
-            //await _context.SaveChangesAsync();
-        }
-
-        public Task<ProductEntity> Delete(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

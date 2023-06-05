@@ -1,12 +1,8 @@
-﻿using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Exceptions;
-using BookStoreApplicationAPI.Models;
+﻿
+using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Net;
 
 namespace BookStoreApplicationAPI.DAL
 {
@@ -18,7 +14,7 @@ namespace BookStoreApplicationAPI.DAL
             _context = context;
         }
 
-        public async Task<StoreItemEntity> GetByProductIdAsync(int productId)
+        public async Task<StoreItem> GetByProductIdAsync(int productId)
         {
             var item = await _context.Book_store.SingleOrDefaultAsync(x => x.Product_Id == productId);
             if (item == null)
@@ -28,7 +24,7 @@ namespace BookStoreApplicationAPI.DAL
             return item;
         }
 
-        public async Task<StoreItemEntity?> Update(int id, int qty)
+        public async Task<StoreItem?> Update(int id, int qty)
         {
             var item = await _context.Book_store.SingleOrDefaultAsync(x => x.Product_Id == id);
             if (item == null) return null;
@@ -39,7 +35,7 @@ namespace BookStoreApplicationAPI.DAL
             return item;
         }
 
-        public async Task<StoreItemEntity?> UpdateProductQuantity(ItemQuantityDto itemRequest)
+        public async Task<StoreItem?> UpdateProductQuantity(ItemQuantityDto itemRequest)
         {
             var item = await _context.Book_store.SingleOrDefaultAsync(x => x.Product_Id == itemRequest.Product_Id);
 

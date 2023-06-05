@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.DAL.UOW;
+using BookStoreApplicationAPI.Data.Entities;
 
 namespace BookStoreApplicationAPI.Controllers
 {
@@ -20,7 +20,7 @@ namespace BookStoreApplicationAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<StoreItemEntity>> GetProductByIdAsync(int id)
+        public async Task<ActionResult<StoreItem>> GetProductByIdAsync(int id)
         {
             var product = await _unitOfWork.Store.GetByProductIdAsync(id);
             if (product == null) return NotFound();
@@ -32,7 +32,7 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<StoreItemEntity>> UpdateProduct(int id, int quantity)
+        public async Task<ActionResult<StoreItem>> UpdateProduct(int id, int quantity)
         {
             var product = await _unitOfWork.Store.GetByProductIdAsync(id);
             if (product == null) return NotFound();

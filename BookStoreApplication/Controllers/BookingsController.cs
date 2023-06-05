@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookStoreApplicationAPI.Services.User;
-using BookStoreApplicationAPI.Exceptions;
 using AutoMapper;
-using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.DAL.UOW;
+using BookStoreApplicationAPI.Data.Entities;
+using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Data.Exceptions;
 
 namespace BookStoreApplicationAPI.Controllers
 {
@@ -29,13 +31,14 @@ namespace BookStoreApplicationAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<Booking>> GetBookingById(int id)
+        public async Task<ActionResult<BookingWithProduct>> GetBookingById(int id)
         {
             var bookingEntity = await _unitOfWork.Bookings.GetBookingByIdAsync(id);
+            //var b = _unitOfWork.get().GetByID(id);
             if (bookingEntity == null) return NotFound();
-            var product = await _unitOfWork.Products.Get(bookingEntity.Product_Id);
+            var product = await _unitOfWork.Products.GetAsync(bookingEntity.Product_Id);
 
-            var booking = _mapper.Map<BookingEntity, Booking>(bookingEntity);
+            var booking = _mapper.Map<Booking, BookingWithProduct>(bookingEntity);
             booking.Product = product.Value;
 
             return booking;
@@ -50,11 +53,11 @@ namespace BookStoreApplicationAPI.Controllers
         /// <returns></returns>
         [HttpPost("{userId}/bookings")]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<BookingEntity>> CreateBooking(
+        public async Task<ActionResult<Booking>> CreateBooking(
             int userId, [FromBody] BookingRequestDto bookingForm)
         {
             var user = await _unitOfWork.Users.GetUserWithAdressAsync(userId);
-            var product = await _unitOfWork.Products.Get(bookingForm.Product_Id);
+            var product = await _unitOfWork.Products.GetAsync(bookingForm.Product_Id);
             var storeItem = await _unitOfWork.Store.GetByProductIdAsync(bookingForm.Product_Id);
 
             var isRequestedQty_Available = _bookingLogicService.isRequestetProductAvailable(bookingForm.Requested_qty, storeItem.Available_qty);

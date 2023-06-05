@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Models;
+using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +21,7 @@ namespace BookStoreApplicationAPI.DAL
 
         public async Task CreateBookingAsync(CreateBookingDto booking)
         {
-            var newBooking = _context.Bookings.Add(_mapper.Map<BookingEntity>(booking));
+            var newBooking = _context.Bookings.Add(_mapper.Map<Booking>(booking));
 
             //var created = await _context.SaveChangesAsync();
             //if (created < 1) throw new InvalidOperationException("Could not create booking.");
@@ -29,7 +29,7 @@ namespace BookStoreApplicationAPI.DAL
 
 
 
-        public async Task<BookingEntity> GetBookingByIdAsync(int id)
+        public async Task<Booking> GetBookingByIdAsync(int id)
         {
             var booking = await _context.Bookings.SingleOrDefaultAsync(x => x.Id == id);
             return booking;

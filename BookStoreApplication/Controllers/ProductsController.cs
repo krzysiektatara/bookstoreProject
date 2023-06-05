@@ -1,8 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using BookStoreApplicationAPI.Exceptions;
-using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.DAL.UOW;
+using BookStoreApplicationAPI.Data.Entities;
+using BookStoreApplicationAPI.Data.Models;
+using BookStoreApplicationAPI.Data.Exceptions;
 
 namespace BookStoreApplicationAPI.Controllers
 {
@@ -21,16 +22,18 @@ namespace BookStoreApplicationAPI.Controllers
         [HttpPost]
         [ProducesResponseType(404)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<ProductEntity>> AddProduct(AddProductDto product)
+        public async Task<ActionResult<Product>> AddProduct(Product product)
         {
             if (_unitOfWork.Products.GetProductByNameAsync(product.Name) == null)
             {
                 return BadRequest(new ApiError(
                    $"product with name {product.Name}, already exists.")
-                   );
+                );
             }
-            var newProduct = await _unitOfWork.Products.AddProductAsync(product);
+
+            var newProduct = await _unitOfWork.Products.Add(product);
             _unitOfWork.Save();
+            _unitOfWork.Dispose();
 
             return Created(string.Empty, newProduct);
         }
@@ -40,8 +43,8 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<Product>> GetProduct(int productId)
         {
-            var product = await _unitOfWork.Products.GetProductAsync(productId);
-            if (product == null) return NotFound();
+            var product = await _unitOfWork.Products.GetAsync(productId);
+            if (product.Value == null) return NotFound();
             return product;
         }
 
@@ -53,11 +56,11 @@ namespace BookStoreApplicationAPI.Controllers
         [HttpGet(Name = nameof(GetProducts))]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<Collection<Product>>> GetProducts()
+        public async Task<ActionResult<Collection<ProductWithResource>>> GetProducts()
         {
             var products = await _unitOfWork.Products.GetProductsAsync();
 
-            var collection = new Collection<Product>()
+            var collection = new Collection<ProductWithResource>()
             {
                 Self = Link.ToCollection(nameof(GetProducts)),
                 Value = products.ToArray(),
@@ -72,7 +75,9 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> DeleteProductById(int id)
         {
-            await _unitOfWork.Products.Delete(id);
+            var product = _unitOfWork.Products.GetAsync(id).Result.Value;
+            if (product == null) return NotFound();
+            _unitOfWork.Products.Delete(product);
             _unitOfWork.Save();
             return NoContent();
         }

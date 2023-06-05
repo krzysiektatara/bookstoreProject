@@ -1,13 +1,13 @@
-﻿using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Models;
+﻿using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.Data.Entities;
 
 namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
     public interface IStoreRepository
     {
-        Task<StoreItemEntity> GetByProductIdAsync(int id);
-        Task<StoreItemEntity?> UpdateProductQuantity(ItemQuantityDto itemRequest);
-        Task<StoreItemEntity?> Update(int id, int qty);
+        Task<StoreItem> GetByProductIdAsync(int id);
+        Task<StoreItem?> UpdateProductQuantity(ItemQuantityDto itemRequest);
+        Task<StoreItem?> Update(int id, int qty);
 
         //Task VerifyProductAvailabilty(ItemQuantityDto itemRequest);
     }

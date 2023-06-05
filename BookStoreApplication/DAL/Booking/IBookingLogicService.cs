@@ -1,5 +1,4 @@
-﻿using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Models;
+﻿
 
 namespace BookStoreApplicationAPI.Services.User
 {

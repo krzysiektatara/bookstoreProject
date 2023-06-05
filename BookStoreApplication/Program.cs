@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookStoreApplicationAPI.Data;
 using BookStoreApplicationAPI.Services.User;
-using BookStoreApplicationAPI.Infrastructure;
-using BookStoreApplicationAPI.Filters;
 using Microsoft.OpenApi.Models;
 using BookStoreApplicationAPI.Services.Booking;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.DAL.UOW;
+using BookStoreApplicationAPI.Data.Infrastructure;
+using BookStoreApplicationAPI.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -59,6 +59,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseMiddleware<ExceptionMiddleware>();
 }
 
 app.UseHttpsRedirection();

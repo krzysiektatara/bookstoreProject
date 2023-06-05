@@ -1,23 +1,18 @@
-﻿using BookStoreApplication.Models;
-using BookStoreApplicationAPI.Models;
+﻿using BookStoreApplicationAPI.Data.Entities;
+using BookStoreApplicationAPI.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
-    public interface IProductRepository : IGenericRepository<ProductEntity>
+    public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<ActionResult<ProductEntity>> Get(int id);
 
-        Task<IEnumerable<Product>> GetProductsAsync();
+        Task<IEnumerable<ProductWithResource>> GetProductsAsync();
 
-        Task<ActionResult<Product>> GetProductAsync(int id);
+        Task<ActionResult<ProductWithResource>> GetProductAsync(int id);
 
+        Task<ActionResult<Product>> GetProductByNameAsync(string name);
 
-        Task<ActionResult<ProductEntity>> GetProductByNameAsync(string name);
-
-        Task<ProductEntity> AddProductAsync(AddProductDto product);
-
-        //Task Delete(int id);
 
     }
 }

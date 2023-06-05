@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStoreApplicationAPI.DAL;
+using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using BookStoreApplicationAPI.Services.User;
 
@@ -13,6 +14,9 @@ namespace BookStoreApplicationAPI.DAL.UOW
         public IProductRepository Products { get; }
         public IStoreRepository Store { get; }
         public IUserRepository Users { get; }
+
+  
+
         public UnitOfWork(
             BookStoreDbContext context,
             IBookingRepository bookingRepository,
@@ -27,6 +31,7 @@ namespace BookStoreApplicationAPI.DAL.UOW
             Store = storeRepository;
             Users = userRepository;
         }
+
 
         public void Save()
         {
