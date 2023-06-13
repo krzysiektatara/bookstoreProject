@@ -1,67 +1,115 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookStoreApplicationAPI.DAL.UOW;
 using BookStoreApplicationAPI.Data.Entities;
+using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Data.Dto;
 
 namespace BookStoreApplication.Controllers
 {
+    /// <summary>
+    /// UsersController
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        
-        private readonly IUnitOfWork _unitOfWork;
 
-        public UsersController(IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBookingLogicService _bookingLogicService;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bookingLogicService"></param>
+        /// <param name="unitOfWork"></param>
+        public UsersController(
+            IBookingLogicService bookingLogicService,
+            IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _bookingLogicService = bookingLogicService;
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Get user by id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("{userId}", Name = nameof(GetUser))]
         [ProducesResponseType(404)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<User>> Add(User user)
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<User>> GetUser(int userId)
         {
-            if (_unitOfWork.Users.GetAsync == null)
-            {
-                return Problem("Entity set 'UserContext.Users'  is null.");
-            }
-            var  newUser = await _unitOfWork.Users.Add(user);
-            _unitOfWork.Save();
+            var user = await _unitOfWork.Users.GetAsyncById(userId);
 
-            return Created(string.Empty, newUser);
+            return Ok(user);
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPost("/2")]
-        [ProducesResponseType(404)]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<User>> Add2(User user)
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<User>> AddUser(User user)
         {
-            if (_unitOfWork.Users.GetAsync == null)
-            {
-                return Problem("Entity set 'UserContext.Users'  is null.");
-            }
-            var newUser = await _unitOfWork.Users.Add(user);
-            _unitOfWork.Save();
-
-            return Created(string.Empty, newUser);
+            var newUser = await _unitOfWork.Users.AddAsync(user);
+            _unitOfWork.SaveAsync();
+            _unitOfWork.Dispose();
+            return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, newUser);
         }
 
-        //        //GET: api/Users/5
-        [HttpGet("{id}")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(Name = nameof(GetUsers))]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            var user = await _unitOfWork.Users.GetAsync(id);
-            if (user == null) return NotFound();
-
-            return user;
+            var users = await _unitOfWork.Users.GetAll();
+            return users;
         }
 
+        [HttpDelete(Name = nameof(DeleteUser))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> DeleteUser(int Id)
+        {
+            var userToDelete = await _unitOfWork.Users.GetAsyncById(Id);
+
+            await _unitOfWork.Users.RemoveAsync(userToDelete);
+            if (_bookingLogicService.isEntityDeleted(userToDelete))
+            {
+                _unitOfWork.SaveAsync();
+                _unitOfWork.Dispose();
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPatch("{userId}", Name = nameof(EditUser))]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> EditUser(
+            int userId, [FromBody] AddUserDto user)
+        {
+            var userToEdit = await _unitOfWork.Users.GetAsyncById(userId);
+         
+            await _unitOfWork.Users.UpdateAsync(userToEdit, user);
+                _unitOfWork.SaveAsync();
+                _unitOfWork.Dispose();
+                return Ok();
+        }
     }
 }

@@ -20,9 +20,9 @@ namespace BookStoreApplicationAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<StoreItem>> GetProductByIdAsync(int id)
+        public async Task<ActionResult<StoreItem>> GetStoreItemByIdAsync(int id)
         {
-            var product = await _unitOfWork.Store.GetByProductIdAsync(id);
+            var product = await _unitOfWork.Store.GetAsyncById(id);
             if (product == null) return NotFound();
 
             return product;
@@ -34,13 +34,13 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<StoreItem>> UpdateProduct(int id, int quantity)
         {
-            var product = await _unitOfWork.Store.GetByProductIdAsync(id);
+            var product = await _unitOfWork.Store.GetAsyncById(id);
             if (product == null) return NotFound();
             var updatedProduct = _unitOfWork.Store.Update(id, quantity);
             if (updatedProduct == null) return NotFound();
             else
             {
-                _unitOfWork.Save();
+                _unitOfWork.SaveAsync();
                 return Created(string.Empty, product);
             }
         }

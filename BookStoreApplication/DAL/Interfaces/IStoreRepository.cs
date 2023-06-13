@@ -3,9 +3,8 @@ using BookStoreApplicationAPI.Data.Entities;
 
 namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
-    public interface IStoreRepository
+    public interface IStoreRepository : IGenericRepository<StoreItem>
     {
-        Task<StoreItem> GetByProductIdAsync(int id);
         Task<StoreItem?> UpdateProductQuantity(ItemQuantityDto itemRequest);
         Task<StoreItem?> Update(int id, int qty);
 

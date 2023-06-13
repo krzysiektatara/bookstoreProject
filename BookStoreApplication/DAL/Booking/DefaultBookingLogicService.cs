@@ -1,6 +1,8 @@
 ﻿using BookStoreApplicationAPI.DAL;
+using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Services.User;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace BookStoreApplicationAPI.Services.Booking
@@ -15,5 +17,8 @@ namespace BookStoreApplicationAPI.Services.Booking
 
         public bool isRequestetProductAvailable(int requested_qty, int available_qty)
         => available_qty - requested_qty >=0;
+
+        public bool isEntityDeleted(Entity entity)
+        => _context.Entry(entity).State == EntityState.Deleted;
     }
 }

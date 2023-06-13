@@ -12,7 +12,12 @@ namespace BookStoreApplicationAPI.Data.Infrastructure
         public MappingProfile()
         {
 
-            CreateMap<AddUserDto, User>();
+            //CreateMap<AddUserDto, User>();
+            CreateMap<User, AddUserDto>()
+                .ReverseMap();
+            CreateMap<Product, AddProductDto>()
+                .ReverseMap();
+            CreateMap<User,AddUserDto> ();
             CreateMap<CreateBookingDto, Booking>();
             CreateMap<Product, Product>();
             CreateMap<UserAdressDto, Booking>()

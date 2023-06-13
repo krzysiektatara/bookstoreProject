@@ -1,8 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using BookStoreApplicationAPI.Data.Entities;
+using System.Runtime.CompilerServices;
 
 namespace BookStoreApplicationAPI.Data.Exceptions
 {
-    public class ProductNotFoundException : DomainException
+    public class EntityNotFoundException : DomainException
     {
         public int? _productId { get; }
 
@@ -10,19 +11,18 @@ namespace BookStoreApplicationAPI.Data.Exceptions
 
         public override short ErrorCode => 404;
 
-        public ProductNotFoundException(string message, Exception? innerException = null)
+        public EntityNotFoundException(string message, Exception? innerException = null)
             : base(innerException)
         {
             ErrorMessage = message;
         }
 
-        public ProductNotFoundException(int productId, Exception? innerException = null)
+        public EntityNotFoundException(int productId, Type type, Exception? innerException = null)
             : base(innerException)
         {
-            _productId = productId;
-            DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(28, 1);
-            defaultInterpolatedStringHandler.AppendLiteral("Product with Id = ");
-            defaultInterpolatedStringHandler.AppendFormatted(_productId);
+            DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(28, 1);            
+            defaultInterpolatedStringHandler.AppendLiteral($"{type.Name} with Id = ");
+            defaultInterpolatedStringHandler.AppendFormatted(productId);
             defaultInterpolatedStringHandler.AppendLiteral(" not found.");
             ErrorMessage = defaultInterpolatedStringHandler.ToStringAndClear();
         }

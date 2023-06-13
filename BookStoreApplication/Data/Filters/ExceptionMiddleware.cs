@@ -32,29 +32,17 @@ namespace BookStoreApplicationAPI.Filters
             }
             catch (Exception exception)
             {
-                //await HandleException(context, exception);
+                await HandleException(context, exception);
             }
         }
 
-        //public void HandleException(HttpContext context, Exception exception)
-        //{
-           
-        //    var error = new ApiError();
-        //    if (_hostEnvironment.IsDevelopment())
-        //    {
-        //        error.Message = context.Exception.Message;
-        //        error.Detail = context.Exception.StackTrace;
-        //    }
-        //    else
-        //    {
-        //        error.Message = "ser error occured.";
-        //        error.Detail = context.Exception.Message;
-        //        context.Result = new ObjectResult(error)
-        //        {
-        //            StatusCode = 500
-        //        };
-        //    }
-        //}
+        public async Task HandleException(HttpContext context, Exception exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 500;
+            ErrorDescription errorDescription = new ErrorDescription(Guid.NewGuid(), _hostEnvironment.IsDevelopment() ? exception.ToString() : "An error occurred in the API. Please use the id and contact the support team if the problem persists.", 500);
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(errorDescription));
+        }
         private async Task HandleDomainException(HttpContext context, DomainException domainException)
         {
             context.Response.ContentType = "application/json";
