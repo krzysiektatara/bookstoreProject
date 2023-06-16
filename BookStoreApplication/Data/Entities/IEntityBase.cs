@@ -4,13 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace BookStoreApplicationAPI.Data.Entities
 {
-    public abstract class Entity
+    public interface IEntityBase
     {
-        [JsonIgnore]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[JsonIgnore]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         //[BindNever]
         //[BindProperty(Name = "Id", SupportsGet = false)]
-        public int Id { get; set; }
+        int Id { get; set; }
     }
 }

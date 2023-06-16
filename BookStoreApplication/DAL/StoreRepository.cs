@@ -1,27 +1,20 @@
 ﻿
+using AutoMapper;
 using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.Data.Entities;
+using BookStoreApplicationAPI.Data.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL
 {
-    public class StoreRepository : IStoreRepository
+    public class StoreRepository : GenericRepository<StoreItem>, IStoreRepository
     {
         private readonly BookStoreDbContext _context;
-        public StoreRepository(BookStoreDbContext context)
-        {
-            _context = context;
-        }
 
-        public async Task<StoreItem> GetByProductIdAsync(int productId)
+        public StoreRepository(BookStoreDbContext context, AutoMapper.IConfigurationProvider mappingConfiguration) 
+            : base(context, mappingConfiguration)
         {
-            var item = await _context.Book_store.SingleOrDefaultAsync(x => x.Product_Id == productId);
-            if (item == null)
-            {
-                return null;
-            }
-            return item;
         }
 
         public async Task<StoreItem?> Update(int id, int qty)
@@ -34,6 +27,7 @@ namespace BookStoreApplicationAPI.DAL
             //_context.SaveChanges();
             return item;
         }
+
 
         public async Task<StoreItem?> UpdateProductQuantity(ItemQuantityDto itemRequest)
         {

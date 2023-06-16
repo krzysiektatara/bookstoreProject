@@ -22,7 +22,7 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<StoreItem>> GetStoreItemByIdAsync(int id)
         {
-            var product = await _unitOfWork.Store.GetAsyncById(id);
+            var product = await _unitOfWork.Store.GetAsync(x => x.Id == id);
             if (product == null) return NotFound();
 
             return product;
@@ -34,7 +34,7 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<StoreItem>> UpdateProduct(int id, int quantity)
         {
-            var product = await _unitOfWork.Store.GetAsyncById(id);
+            var product = await _unitOfWork.Store.GetAsync(x => x.Id == id);
             if (product == null) return NotFound();
             var updatedProduct = _unitOfWork.Store.Update(id, quantity);
             if (updatedProduct == null) return NotFound();

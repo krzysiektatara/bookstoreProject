@@ -11,13 +11,19 @@ namespace BookStoreApplicationAPI.Data.Infrastructure
     {
         public MappingProfile()
         {
-
-            //CreateMap<AddUserDto, User>();
+            //this one is helper for other mappers converting from no-nullable to nullable. Otherwise it return 0 for null
+            CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
             CreateMap<User, AddUserDto>()
-                .ReverseMap();
+            .ReverseMap()
+            .ForAllMembers(opt => opt.Condition((source, dest, sourceMember) => sourceMember != null));
+
+            CreateMap<User, AddProductDto>()
+            .ReverseMap()
+            .ForAllMembers(opt => opt.Condition((source, dest, sourceMember) => sourceMember != null));
+
             CreateMap<Product, AddProductDto>()
                 .ReverseMap();
-            CreateMap<User,AddUserDto> ();
+            CreateMap<User, AddUserDto>();
             CreateMap<CreateBookingDto, Booking>();
             CreateMap<Product, Product>();
             CreateMap<UserAdressDto, Booking>()

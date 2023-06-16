@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.DAL.Services;
 
 namespace BookStoreApplicationAPI.Controllers
 {
@@ -17,13 +18,16 @@ namespace BookStoreApplicationAPI.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBookingLogicService _bookingLogicService;
+        private readonly IProductService _productService;
 
         public ProductsController(
             IBookingLogicService bookingLogicService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IProductService productService)
         {
             _unitOfWork = unitOfWork;
             _bookingLogicService = bookingLogicService;
+            _productService = productService;
         }
 
         /// <summary>
@@ -36,7 +40,7 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<Product>> GetProduct(int productId)
         {
-            var product = await _unitOfWork.Products.GetAsyncById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             return Ok(product);
         }
 
@@ -48,11 +52,10 @@ namespace BookStoreApplicationAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<Product>> AddProduct(Product product)
+        public async Task<ActionResult<Product>> AddProduct(AddProductDto product)
         {
-            var newProduct = await _unitOfWork.Products.AddAsync(product);
-            _unitOfWork.SaveAsync();
-            _unitOfWork.Dispose();
+            var newProduct = await _productService.AddProductAsync(product);
+ 
 
             return CreatedAtAction(nameof(GetProduct), new { productId = newProduct.Id }, newProduct);
         }
@@ -62,22 +65,28 @@ namespace BookStoreApplicationAPI.Controllers
         /// </summary>
         /// <returns></returns>
         ///  <response code="404">If list of products is null</response>
-        [HttpGet(Name = nameof(GetProducts))]
+        [HttpGet(Name = nameof(GetAllProductsWithResources))]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<Collection<ProductWithResource>>> GetProducts()
+        public async Task<ActionResult<Collection<ProductWithResource>>> GetAllProductsWithResources()
         {
-            var products = await _unitOfWork.Products.GetProductsAsync();
-
-
-            var collection = new Collection<ProductWithResource>()
-            {
-                Self = Link.ToCollection(nameof(GetProducts)),
-                Value = products.ToArray(),
-
-            };
+            var collection = await _productService.GetAllProductsWithResourceAsync();         
 
             return collection;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/allProducts", Name = nameof(GetProducts))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200)]
+        public async Task<IEnumerable<Product>> GetProducts()
+        {
+            var products = await _productService.GetAllProducts();
+
+            return products;
         }
 
         /// <summary>
@@ -91,7 +100,7 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult> DeleteProduct(int Id)
         {
-            var productToDelete = await _unitOfWork.Products.GetAsyncById(Id);
+            var productToDelete = await _unitOfWork.Products.GetAsync(x => x.Id == Id);
 
             await _unitOfWork.Products.RemoveAsync(productToDelete);
             if (_bookingLogicService.isEntityDeleted(productToDelete))
@@ -115,11 +124,8 @@ namespace BookStoreApplicationAPI.Controllers
         public async Task<ActionResult> EditProduct(
             int productId, [FromBody] AddProductDto product)
         {
-            var productToEdit = await _unitOfWork.Products.GetAsyncById(productId);
-
-            await _unitOfWork.Products.UpdateAsync(productToEdit, product);
-            _unitOfWork.SaveAsync();
-            _unitOfWork.Dispose();
+            await _productService.UpdateProductAsync(productId, product);
+            
             return Ok();
         }
     }

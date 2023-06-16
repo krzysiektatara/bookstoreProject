@@ -8,14 +8,18 @@ using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.DAL.UOW;
 using BookStoreApplicationAPI.Data.Infrastructure;
 using BookStoreApplicationAPI.Filters;
+using BookStoreApplicationAPI.DAL.Services;
+using BookStoreApplicationAPI.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IUserRepository, UserRepository>();
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IProductRepository<ProductWithResource>, ProductRepository<ProductWithResource>>();
 builder.Services.AddTransient<IStoreRepository, StoreRepository>();
 builder.Services.AddTransient<IBookingRepository, BookingRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IBookingLogicService, DefaultBookingLogicService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1",

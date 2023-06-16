@@ -3,6 +3,7 @@ using BookStoreApplicationAPI.DAL.UOW;
 using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Data.Dto;
+using BookStoreApplicationAPI.DAL.Services;
 
 namespace BookStoreApplication.Controllers
 {
@@ -16,6 +17,7 @@ namespace BookStoreApplication.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBookingLogicService _bookingLogicService;
+        private readonly IUserService _userService;
 
         /// <summary>
         /// 
@@ -24,10 +26,12 @@ namespace BookStoreApplication.Controllers
         /// <param name="unitOfWork"></param>
         public UsersController(
             IBookingLogicService bookingLogicService,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _bookingLogicService = bookingLogicService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -40,7 +44,7 @@ namespace BookStoreApplication.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<User>> GetUser(int userId)
         {
-            var user = await _unitOfWork.Users.GetAsyncById(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
 
             return Ok(user);
         }
@@ -53,11 +57,10 @@ namespace BookStoreApplication.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<User>> AddUser(User user)
+        public async Task<ActionResult<User>> AddUser(AddUserDto user)
         {
-            var newUser = await _unitOfWork.Users.AddAsync(user);
-            _unitOfWork.SaveAsync();
-            _unitOfWork.Dispose();
+            var newUser = await _userService.AddUserAsync(user);
+
             return CreatedAtAction(nameof(GetUser), new { userId = newUser.Id }, newUser);
         }
 
@@ -70,7 +73,7 @@ namespace BookStoreApplication.Controllers
         [ProducesResponseType(200)]
         public async Task<IEnumerable<User>> GetUsers()
         {
-            var users = await _unitOfWork.Users.GetAll();
+            var users = await _userService.GetAllUsersAsync();
             return users;
         }
 
@@ -80,16 +83,9 @@ namespace BookStoreApplication.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult> DeleteUser(int Id)
         {
-            var userToDelete = await _unitOfWork.Users.GetAsyncById(Id);
+            await _userService.DeleteUserAsync(Id);
 
-            await _unitOfWork.Users.RemoveAsync(userToDelete);
-            if (_bookingLogicService.isEntityDeleted(userToDelete))
-            {
-                _unitOfWork.SaveAsync();
-                _unitOfWork.Dispose();
-                return Ok();
-            }
-            return BadRequest();
+            return Ok();
         }
 
         /// <summary>
@@ -104,12 +100,9 @@ namespace BookStoreApplication.Controllers
         public async Task<ActionResult> EditUser(
             int userId, [FromBody] AddUserDto user)
         {
-            var userToEdit = await _unitOfWork.Users.GetAsyncById(userId);
-         
-            await _unitOfWork.Users.UpdateAsync(userToEdit, user);
-                _unitOfWork.SaveAsync();
-                _unitOfWork.Dispose();
-                return Ok();
+            await _userService.UpdateUserAsync(userId, user);
+
+            return Ok();
         }
     }
 }

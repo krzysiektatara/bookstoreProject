@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStoreApplicationAPI.DAL;
+using BookStoreApplicationAPI.Data.Models;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using BookStoreApplicationAPI.Services.User;
@@ -11,7 +12,7 @@ namespace BookStoreApplicationAPI.DAL.UOW
 
         private readonly BookStoreDbContext _context;
         public IBookingRepository Bookings { get; }
-        public IProductRepository Products { get; }
+        public IProductRepository<ProductWithResource> Products { get; }
         public IStoreRepository Store { get; }
         public IUserRepository Users { get; }
 
@@ -20,7 +21,7 @@ namespace BookStoreApplicationAPI.DAL.UOW
         public UnitOfWork(
             BookStoreDbContext context,
             IBookingRepository bookingRepository,
-            IProductRepository productRepository,
+            IProductRepository<ProductWithResource> productRepository,
             IStoreRepository storeRepository,
             IUserRepository userRepository
             )
@@ -32,15 +33,13 @@ namespace BookStoreApplicationAPI.DAL.UOW
             Users = userRepository;
         }
 
-
-        public void Save()
-        {
-            _context.SaveChanges();
-        }
-
         private bool disposed = false;
 
+        public void SaveAsync()
+            => _context.SaveChangesAsync();
 
+        public void Save()
+            => _context.SaveChanges();
 
         protected virtual void Dispose(bool disposing)
         {

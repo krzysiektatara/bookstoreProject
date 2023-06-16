@@ -36,7 +36,7 @@ namespace BookStoreApplicationAPI.Controllers
             var bookingEntity = await _unitOfWork.Bookings.GetBookingByIdAsync(id);
             //var b = _unitOfWork.get().GetByID(id);
             if (bookingEntity == null) return NotFound();
-            var product = await _unitOfWork.Products.GetAsyncById(bookingEntity.Product_Id);
+            var product = await _unitOfWork.Products.GetAsync(x => x.Id == bookingEntity.Product_Id);
 
             var booking = _mapper.Map<Booking, BookingWithProduct>(bookingEntity);
             booking.Product = product;
@@ -57,8 +57,8 @@ namespace BookStoreApplicationAPI.Controllers
             int userId, [FromBody] BookingRequestDto bookingForm)
         {
             var user = await _unitOfWork.Users.GetUserWithAdressAsync(userId);
-            var product = await _unitOfWork.Products.GetAsyncById(bookingForm.Product_Id);
-            var storeItem = await _unitOfWork.Store.GetAsyncById(bookingForm.Product_Id);
+            var product = await _unitOfWork.Products.GetAsync(x => x.Id == bookingForm.Product_Id);
+            var storeItem = await _unitOfWork.Store.GetAsync(x => x.Id == bookingForm.Product_Id);
 
             var isRequestedQty_Available = _bookingLogicService.isRequestetProductAvailable(bookingForm.Requested_qty, storeItem.Available_qty);
             if (user == null || product == null) return NotFound();

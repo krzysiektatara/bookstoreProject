@@ -8,8 +8,11 @@ namespace BookStoreApplicationAPI.DAL
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(BookStoreDbContext context, IMapper mapper, AutoMapper.IConfigurationProvider mappingConfiguration) 
-            : base(context, mapper, mappingConfiguration)
+
+
+        IMapper _mapper;
+
+        public UserRepository(BookStoreDbContext context, AutoMapper.IConfigurationProvider mappingConfiguration) : base(context, mappingConfiguration)
         {
         }
 

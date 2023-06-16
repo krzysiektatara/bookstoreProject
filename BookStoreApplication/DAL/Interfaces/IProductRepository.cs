@@ -4,15 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
-    public interface IProductRepository : IGenericRepository<Product>
+    public interface IProductRepository<ProductWithResource> : IGenericRepository<Product>
     {
-
-        Task<IEnumerable<ProductWithResource>> GetProductsAsync();
-
-        Task<ActionResult<ProductWithResource>> GetProductAsync(int id);
-
-        Task<ActionResult<Product>> GetProductByNameAsync(string name);
-
+        Task<IEnumerable<ProductWithResource>> GetAllWithResourceAsync();
 
     }
 }

@@ -1,54 +1,80 @@
-﻿using AutoMapper;
-using BookStoreApplicationAPI.Data.Entities;
+﻿using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Data.Exceptions;
 using BookStoreApplicationAPI.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace BookStoreApplicationAPI.DAL
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : Entity
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class, IEntityBase, new()
     {
         internal readonly BookStoreDbContext _context;
-        internal IMapper _mapper;
+        private readonly DbSet<T> _entitiySet;
+
         internal readonly AutoMapper.IConfigurationProvider _mappingConfiguration;
         public GenericRepository(
             BookStoreDbContext context,
-            IMapper mapper,
             AutoMapper.IConfigurationProvider mappingConfiguration
             )
         {
             _context = context;
-            _mapper = mapper;
+            _entitiySet = _context.Set<T>();
             _mappingConfiguration = mappingConfiguration;
         }
 
 
-        public virtual async Task<ActionResult<T>> GetAsync(int id)
+        public virtual async Task<T> GetAsync(Expression<Func<T, bool>> expression)
         {
-            return (await _context.Set<T>().SingleOrDefaultAsync(x => x.Id == id)) ?? throw new ProductNotFoundException(id);
+            return (await _entitiySet.SingleOrDefaultAsync(expression)) ?? throw new EntityNotFoundException(expression.Name);
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual async Task<T> GetAsyncById(int id)
         {
-            return await _context.Set<T>().ToListAsync();
+            return (await _entitiySet.FirstOrDefaultAsync(n => n.Id == id)) ?? throw new EntityNotFoundException(id, typeof(T));
         }
 
-        public async Task<T> Add(T entity)
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            var a = await _context.Set<T>().AddAsync(entity);
+            return await _entitiySet.ToListAsync();
+        }
+
+
+        public virtual async Task<T> Add(T entity)
+        {
+            return _context.Add(entity).Entity;
+        }
+
+        public virtual async Task<T> AddAsync(T entity)
+        {
+            var a = await _context.AddAsync(entity);
             return a.Entity;
         }
 
-        public async void Delete(T entity)
+        public async Task RemoveAsync(T entity)
         {
-            _context.Set<T>().Remove(entity);
+            _context.Remove(entity);
         }
 
-        public async void Update(T entity)
+        public async Task DeleteAsync(T entity)
         {
-            _context.Set<T>().Update(entity);
+            EntityEntry entityEntry = _context.Entry<T>(entity);
+            entityEntry.State = EntityState.Deleted;
         }
+
+        public virtual Task Update(T entity, Object? dto = null)
+        {
+            //todo
+            throw new NotImplementedException();
+            _context.Update(entity);
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            EntityEntry entityEntry = _context.Entry<T>(entity);
+            entityEntry.State = EntityState.Modified;
+        }
+
+
     }
 }

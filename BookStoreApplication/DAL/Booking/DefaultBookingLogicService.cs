@@ -18,7 +18,10 @@ namespace BookStoreApplicationAPI.Services.Booking
         public bool isRequestetProductAvailable(int requested_qty, int available_qty)
         => available_qty - requested_qty >=0;
 
-        public bool isEntityDeleted(Entity entity)
+        public bool isEntityDeleted(IEntityBase entity)
         => _context.Entry(entity).State == EntityState.Deleted;
+
+        public bool isEntityModified(IEntityBase entity)
+        => _context.Entry(entity).State == EntityState.Modified;
     }
 }

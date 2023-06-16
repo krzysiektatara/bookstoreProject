@@ -2,6 +2,7 @@
 using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Repositories.Interfaces;
+using BookStoreApplicationAPI.Services.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL
@@ -10,11 +11,13 @@ namespace BookStoreApplicationAPI.DAL
     {
         private readonly BookStoreDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IBookingLogicService _bookingLogicService;
         public BookingRepository(
+             IBookingLogicService bookingLogicService,
             IMapper mapper,
             BookStoreDbContext context)
         {
-
+            _bookingLogicService = bookingLogicService;
             _context = context;
             _mapper = mapper;
         }
@@ -22,9 +25,6 @@ namespace BookStoreApplicationAPI.DAL
         public async Task CreateBookingAsync(CreateBookingDto booking)
         {
             var newBooking = _context.Bookings.Add(_mapper.Map<Booking>(booking));
-
-            //var created = await _context.SaveChangesAsync();
-            //if (created < 1) throw new InvalidOperationException("Could not create booking.");
         }
 
 
