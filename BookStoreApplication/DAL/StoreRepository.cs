@@ -19,7 +19,7 @@ namespace BookStoreApplicationAPI.DAL
 
         public async Task<StoreItem?> Update(int id, int qty)
         {
-            var item = await _context.Book_store.SingleOrDefaultAsync(x => x.Product_Id == id);
+            var item = await _context.Book_store.SingleOrDefaultAsync(x => x.ProductId == id);
             if (item == null) return null;
             item.Available_qty += qty;
             //_context.Entry(item).State = EntityState.Unchanged;
@@ -31,7 +31,7 @@ namespace BookStoreApplicationAPI.DAL
 
         public async Task<StoreItem?> UpdateProductQuantity(ItemQuantityDto itemRequest)
         {
-            var item = await _context.Book_store.SingleOrDefaultAsync(x => x.Product_Id == itemRequest.Product_Id);
+            var item = await _context.Book_store.SingleOrDefaultAsync(x => x.ProductId == itemRequest.Product_Id);
 
             item.Available_qty -= itemRequest.Requested_qty;
             item.Booked_qty += itemRequest.Requested_qty;

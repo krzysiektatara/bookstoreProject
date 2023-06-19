@@ -41,10 +41,6 @@ builder.Services.AddMvc(options =>
 });
 builder.Services.AddDbContext<BookStoreDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreApplicationContext") ?? throw new InvalidOperationException("Connection string 'BookStoreApplicationAPIContext' not found.")));
-//builder.Services.AddDbContext<UserDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreApplicationContext") ?? throw new InvalidOperationException("Connection string 'BookStoreApplicationContext' not found.")));
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 //builder.Services.AddLogging(options =>
@@ -53,7 +49,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
-    
+
 var app = builder.Build();
 
 InitializeDatabase(app);
@@ -84,11 +80,11 @@ static void InitializeDatabase(IHost host)
         {
             SeedData.InitializeAsync(services).Wait();
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             var logger = services.GetRequiredService<ILogger<Program>>();
             logger.LogError(ex, "error seeding db.");
         }
- 
+
     }
 }

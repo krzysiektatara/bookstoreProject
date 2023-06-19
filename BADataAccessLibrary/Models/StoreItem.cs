@@ -10,9 +10,15 @@ namespace BookStoreApplicationAPI.Data.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int Product_Id { get; set; }
+        [Required]
+        [ForeignKey("Product")]
+        public int ProductId { get; set; }
+        public Product? Product { get; set; }
+        [Required]
         public int Available_qty { get; set; }
+        [Required]
         public int Booked_qty { get; set; }
+        [Required]
         public int Sold_qty { get; set; }
     }
 }

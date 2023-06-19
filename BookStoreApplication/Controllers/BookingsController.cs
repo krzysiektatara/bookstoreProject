@@ -6,6 +6,7 @@ using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Data.Exceptions;
+using Microsoft.CodeAnalysis;
 
 namespace BookStoreApplicationAPI.Controllers
 {
@@ -36,7 +37,7 @@ namespace BookStoreApplicationAPI.Controllers
             var bookingEntity = await _unitOfWork.Bookings.GetBookingByIdAsync(id);
             //var b = _unitOfWork.get().GetByID(id);
             if (bookingEntity == null) return NotFound();
-            var product = await _unitOfWork.Products.GetAsync(x => x.Id == bookingEntity.Product_Id);
+            var product = await _unitOfWork.Products.GetAsync(x => x.Id == bookingEntity.ProductId);
 
             var booking = _mapper.Map<Booking, BookingWithProduct>(bookingEntity);
             booking.Product = product;

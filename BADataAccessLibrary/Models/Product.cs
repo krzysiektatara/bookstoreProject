@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreApplicationAPI.Data.Entities
 {
@@ -14,9 +14,9 @@ namespace BookStoreApplicationAPI.Data.Entities
 
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string ProductName { get; set; }
 
-        [MaxLength(500)]
+        [Column(TypeName = "varchar(500)")]
         public string Description { get; set; }
 
         [Required]
