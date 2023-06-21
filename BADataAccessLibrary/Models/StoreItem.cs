@@ -13,7 +13,7 @@ namespace BookStoreApplicationAPI.Data.Entities
         [Required]
         [ForeignKey("Product")]
         public int ProductId { get; set; }
-        public Product? Product { get; set; }
+
         [Required]
         public int Available_qty { get; set; }
         [Required]
