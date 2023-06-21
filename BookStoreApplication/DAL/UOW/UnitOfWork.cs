@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.Data.Models;
-using BookStoreApplicationAPI.Models;
 using BookStoreApplicationAPI.Repositories.Interfaces;
-using BookStoreApplicationAPI.Services.User;
 
 namespace BookStoreApplicationAPI.DAL.UOW
 {

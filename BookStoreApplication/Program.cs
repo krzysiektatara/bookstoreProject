@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookStoreApplicationAPI.Data;
-using BookStoreApplicationAPI.Services.User;
 using Microsoft.OpenApi.Models;
-using BookStoreApplicationAPI.Services.Booking;
 using BookStoreApplicationAPI.Repositories.Interfaces;
 using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.DAL.UOW;
@@ -17,9 +15,9 @@ builder.Services.AddTransient<IProductRepository<ProductWithResource>, ProductRe
 builder.Services.AddTransient<IStoreRepository, StoreRepository>();
 builder.Services.AddTransient<IBookingRepository, BookingRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IBookingLogicService, DefaultBookingLogicService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IStoreService, StoreService>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1",

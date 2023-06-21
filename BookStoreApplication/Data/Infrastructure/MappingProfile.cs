@@ -30,11 +30,17 @@ namespace BookStoreApplicationAPI.Data.Infrastructure
                 .ForAllMembers(d => d.Ignore());
             CreateMap<UserAdressDto, CreateBookingDto>()
                 .ForMember(d => d.Delivery_Address, opt => opt.MapFrom(s => s.Address));
+            //CreateMap<BookingRequestDto, Booking>()
+            //.ForAllMembers(d => d.Ignore());
             CreateMap<BookingRequestDto, Booking>()
-            .ForAllMembers(d => d.Ignore());
-            CreateMap<BookingRequestDto, Booking>()
-                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Product_Id))
-                .ForMember(d => d.Quantity, opt => opt.MapFrom(s => s.Requested_qty));
+                .AfterMap((src, dst) =>
+                {
+
+                    if (dst.Status_Id == 0)
+                    {
+                        dst.Status_Id = 1;
+                    }
+                });
 
             CreateMap<Booking, BookingWithProduct>();
 

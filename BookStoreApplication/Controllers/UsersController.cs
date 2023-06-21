@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BookStoreApplicationAPI.DAL.UOW;
 using BookStoreApplicationAPI.Data.Entities;
-using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.DAL.Services;
 
@@ -15,8 +13,6 @@ namespace BookStoreApplication.Controllers
     public class UsersController : ControllerBase
     {
 
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IBookingLogicService _bookingLogicService;
         private readonly IUserService _userService;
 
         /// <summary>
@@ -24,13 +20,8 @@ namespace BookStoreApplication.Controllers
         /// </summary>
         /// <param name="bookingLogicService"></param>
         /// <param name="unitOfWork"></param>
-        public UsersController(
-            IBookingLogicService bookingLogicService,
-            IUnitOfWork unitOfWork,
-            IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _unitOfWork = unitOfWork;
-            _bookingLogicService = bookingLogicService;
             _userService = userService;
         }
 

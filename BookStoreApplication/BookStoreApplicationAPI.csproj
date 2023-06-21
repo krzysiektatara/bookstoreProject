@@ -30,6 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="DAL\Booking\" />
 	  <Folder Include="Data\Entities\" />
 	</ItemGroup>
 

@@ -25,6 +25,8 @@ namespace BookStoreApplicationAPI.Data
             await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Users', RESEED, 0)");
             await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Bookings', RESEED, 0)");
 
+            //context.AddRange() => more efficient way to seed data
+            //Read json file, deserialize, add range
 
             await context.Database.ExecuteSqlRawAsync("INSERT INTO dbo.Roles (Name) VALUES " +
                 "('customer'), ('admin'), ('manager');");
@@ -38,7 +40,7 @@ namespace BookStoreApplicationAPI.Data
 
             var productsIds = await context.Products.Select(x => x.Id).ToListAsync();
             await context.Database.ExecuteSqlRawAsync($"INSERT INTO dbo.Bookings (UserId, ProductId, delivery_address, status_id, quantity) VALUES" +
-                $"({usersIds[5]}, {productsIds[2]}, 'Address 1', 1, 2),\r\n  ({usersIds[1]}, {productsIds[1]}, 1, 3),\r\n  ({usersIds[5]}, {productsIds[0]}, 'Address 3', 1, 4),\r\n  ({usersIds[2]}, {productsIds[3]}, 'Address 4', 1, 5),\r\n  ({usersIds[0]}, {productsIds[3]}, 'Address 5', 1, 6);");
+                $"({usersIds[5]}, {productsIds[2]}, 'Address 1', 1, 2),\r\n  ({usersIds[1]}, {productsIds[1]},'Address 2', 1, 3),\r\n  ({usersIds[5]}, {productsIds[0]}, 'Address 3', 1, 4),\r\n  ({usersIds[2]}, {productsIds[3]}, 'Address 4', 1, 5),\r\n  ({usersIds[0]}, {productsIds[3]}, 'Address 5', 1, 6);");
 
             await context.Database.ExecuteSqlRawAsync($"INSERT INTO dbo.book_store (ProductId, available_qty, booked_qty, sold_qty) VALUES" +
                 $"({productsIds[0]}, 10, 4, 2),\r\n  ({productsIds[1]}, 12, 3, 5),\r\n  ({productsIds[2]}, 3, 2, 0),\r\n  ({productsIds[3]}, 6, 11, 9),\r\n  ({productsIds[4]}, 4, 0, 0);");

@@ -1,7 +1,6 @@
 ﻿using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Data.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreApplicationAPI.DAL.Services
 {

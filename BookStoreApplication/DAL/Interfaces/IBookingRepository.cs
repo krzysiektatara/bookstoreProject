@@ -3,10 +3,7 @@ using BookStoreApplicationAPI.Data.Entities;
 
 namespace BookStoreApplicationAPI.Repositories.Interfaces
 {
-    public interface IBookingRepository
+    public interface IBookingRepository : IGenericRepository<Booking>
     {
-        Task<Booking> GetBookingByIdAsync(int id);
-        Task CreateBookingAsync(CreateBookingDto booking);
-        Task<bool> ReviewBooking(BookingRequestDto booking);
     }
 }

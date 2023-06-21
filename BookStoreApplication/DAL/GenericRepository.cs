@@ -69,7 +69,7 @@ namespace BookStoreApplicationAPI.DAL
             _context.Update(entity);
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             EntityEntry entityEntry = _context.Entry<T>(entity);
             entityEntry.State = EntityState.Modified;

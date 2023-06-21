@@ -6,10 +6,14 @@ namespace BookStoreApplicationAPI.Data.Dto
     public class BookingRequestDto
     {
         [Required]
-        [Display(name: "productID")]
-        public int Product_Id { get; set; }
+        [Display(name: "product ID")]
+        public int ProductId { get; set; }
+
         [Required]
-        [Display(name: "quantity")]
-        public int Requested_qty { get; set; }
+        [Display(name: "Requested quantity")]
+        public int Quantity { get; set; }
+
+        [Display(name: "Delivery address")]
+        public string? Delivery_Address { get; set; }
     }
 }

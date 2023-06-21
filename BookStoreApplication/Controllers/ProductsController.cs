@@ -1,12 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using BookStoreApplicationAPI.DAL.UOW;
 using BookStoreApplicationAPI.Data.Entities;
 using BookStoreApplicationAPI.Data.Models;
-using BookStoreApplicationAPI.Data.Exceptions;
-using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using BookStoreApplicationAPI.Services.User;
 using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.DAL.Services;
 
@@ -16,17 +11,10 @@ namespace BookStoreApplicationAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IBookingLogicService _bookingLogicService;
         private readonly IProductService _productService;
 
-        public ProductsController(
-            IBookingLogicService bookingLogicService,
-            IUnitOfWork unitOfWork,
-            IProductService productService)
+        public ProductsController(IProductService productService)
         {
-            _unitOfWork = unitOfWork;
-            _bookingLogicService = bookingLogicService;
             _productService = productService;
         }
 
@@ -55,7 +43,7 @@ namespace BookStoreApplicationAPI.Controllers
         public async Task<ActionResult<Product>> AddProduct(AddProductDto product)
         {
             var newProduct = await _productService.AddProductAsync(product);
- 
+
 
             return CreatedAtAction(nameof(GetProduct), new { productId = newProduct.Id }, newProduct);
         }
@@ -70,7 +58,7 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<Collection<ProductWithResource>>> GetAllProductsWithResources()
         {
-            var collection = await _productService.GetAllProductsWithResourceAsync();         
+            var collection = await _productService.GetAllProductsWithResourceAsync();
 
             return collection;
         }
@@ -100,16 +88,8 @@ namespace BookStoreApplicationAPI.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult> DeleteProduct(int Id)
         {
-            var productToDelete = await _unitOfWork.Products.GetAsync(x => x.Id == Id);
-
-            await _unitOfWork.Products.RemoveAsync(productToDelete);
-            if (_bookingLogicService.isEntityDeleted(productToDelete))
-             {
-                _unitOfWork.SaveAsync();
-                _unitOfWork.Dispose();
-                return Ok();
-            }
-            return BadRequest();
+            await _productService.DeleteProductAsync(Id);
+            return Ok();
         }
 
         /// <summary>
@@ -125,7 +105,7 @@ namespace BookStoreApplicationAPI.Controllers
             int productId, [FromBody] AddProductDto product)
         {
             await _productService.UpdateProductAsync(productId, product);
-            
+
             return Ok();
         }
     }
