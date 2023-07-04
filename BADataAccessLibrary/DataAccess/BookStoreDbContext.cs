@@ -1,6 +1,7 @@
 ﻿
-using Microsoft.EntityFrameworkCore;
+using BADataAccessLibrary.Models;
 using BookStoreApplicationAPI.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL
 {
@@ -10,6 +11,28 @@ namespace BookStoreApplicationAPI.DAL
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                    .Entity<Role>()
+                    .HasData(Enum.GetValues(typeof(RoleEnum))
+                        .Cast<RoleEnum>()
+                        .Select(e => new Role
+                        {
+                            Id = (short)e,
+                            Name = e.ToString()
+                        })
+            );
+        }
+
+        //This anable using Lazy proxies, need EntityFramework.core.proxies nuGat package
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder
+        //        .UseLazyLoadingProxies()
+        //        .UseSqlServer();
+        //}
 
         public DbSet<Product> Products { get; set; } = default!;
         public DbSet<User> Users { get; set; } = default!;

@@ -7,7 +7,6 @@ namespace BookStoreApplicationAPI.Data.Entities
 {
     public class Product : IEntityBase
     {
-        [JsonIgnore]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]     
         public int Id { get; set; }

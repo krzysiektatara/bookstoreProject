@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using BADataAccessLibrary.Models;
 using BookStoreApplicationAPI.DAL.UOW;
 using BookStoreApplicationAPI.Data.Dto;
 using BookStoreApplicationAPI.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL.Services
 {
@@ -26,6 +26,7 @@ namespace BookStoreApplicationAPI.DAL.Services
         public async Task<User> AddUserAsync(AddUserDto user)
         {
             var addedUser = await _unitOfWork.Users.AddAsync(_mapper.Map<User>(user));
+            addedUser.RoleEnum = RoleEnum.Customer;
 
             _unitOfWork.SaveAsync();
             return addedUser;

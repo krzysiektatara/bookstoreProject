@@ -41,14 +41,14 @@ namespace BookStoreApplication.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Create new user with customer Role.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<User>> AddUser(AddUserDto user)
+        public async Task<ActionResult<User>> CreateNewUser(AddUserDto user)
         {
             var newUser = await _userService.AddUserAsync(user);
 

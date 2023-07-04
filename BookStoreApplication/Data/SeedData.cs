@@ -6,7 +6,10 @@ namespace BookStoreApplicationAPI.Data
 {
     public static class SeedData
     {
-
+        //TODO
+        //1) OnModelCreating - move here from context
+        //2) context.AddRange() => more efficient way to seed data
+        //Read json file, deserialize, add range
         public static async Task InitializeAsync(IServiceProvider services)
         {
             await AddTestData(services.GetRequiredService<BookStoreDbContext>());
@@ -18,18 +21,11 @@ namespace BookStoreApplicationAPI.Data
             await context.Database.ExecuteSqlRawAsync("DELETE FROM dbo.Book_store");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM dbo.Users");
             await context.Database.ExecuteSqlRawAsync("DELETE FROM dbo.Products");
-            await context.Database.ExecuteSqlRawAsync("DELETE FROM dbo.Roles");
 
-            await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Roles', RESEED, 0)");
             await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Products', RESEED, 0)");
             await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Users', RESEED, 0)");
             await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Bookings', RESEED, 0)");
-
-            //context.AddRange() => more efficient way to seed data
-            //Read json file, deserialize, add range
-
-            await context.Database.ExecuteSqlRawAsync("INSERT INTO dbo.Roles (Name) VALUES " +
-                "('customer'), ('admin'), ('manager');");
+          
 
             await context.Database.ExecuteSqlRawAsync("INSERT INTO dbo.Users (Name, Address, Email, Phone, RoleId, Login, Password) VALUES" +
                 "('User 1', 'Address 1', 'user1@example.com', '555-555-1234', 1, 'user1', 'password1'),\r\n  ('User 2', 'Address 2', 'user2@example.com', '555-555-2345', 1, 'user2', 'password2'),\r\n  ('User 3', 'Address 3', 'user3@example.com', '555-555-3456', 1, 'user3', 'password3'),\r\n  ('User 4', 'Address 4', 'user4@example.com', '555-555-4567', 1, 'user4', 'password4'),\r\n  ('User 5', 'Address 5', 'user5@example.com', '555-555-5678', 1, 'user5', 'password5'),\r\n  ('User 6', 'Address 6', 'user6@example.com', '555-555-6789', 1, 'user6', 'password6'),\r\n  ('User 7', 'Address 7', 'user7@example.com', '555-555-7890', 1, 'user7', 'password7'),\r\n  ('User 8', 'Address 8', 'user8@example.com', '555-555-8901', 1, 'user8', 'password8'),\r\n  ('User 9', 'Address 9', 'user9@example.com', '555-555-9012', 1, 'user9', 'password9'),\r\n  ('User 10', 'Address 10', 'user10@example.com', '555-555-0123', 1, 'user10', 'password10'),\r\n  ('AdminUser', 'Address', 'admin@example.com', '555-555-1123', 2, 'admin', 'password');");
