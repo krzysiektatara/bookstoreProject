@@ -1,6 +1,7 @@
 ﻿
-using Microsoft.EntityFrameworkCore;
+using BADataAccessLibrary.Models;
 using BookStoreApplicationAPI.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreApplicationAPI.DAL
 {
@@ -9,6 +10,20 @@ namespace BookStoreApplicationAPI.DAL
         public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                    .Entity<Role>()
+                    .HasData(Enum.GetValues(typeof(RoleEnum))
+                        .Cast<RoleEnum>()
+                        .Select(e => new Role
+                        {
+                            Id = (short)e,
+                            Name = e.ToString()
+                        })
+            );
         }
 
         public DbSet<Product> Products { get; set; } = default!;

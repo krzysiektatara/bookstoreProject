@@ -8,7 +8,7 @@ namespace BookStoreApplicationAPI.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string ProductName { get; set; }
         public double Price { get; set; }
     }
 }
