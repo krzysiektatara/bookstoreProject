@@ -27,7 +27,6 @@ namespace BookStoreApplicationAPI.Data.Entities
         public string Phone { get; set; }
         [MaxLength(500)]
         public string Address { get; set; }
-        [Key]
         [Required]
         [MaxLength(100)]
         public string Login { get; set; }

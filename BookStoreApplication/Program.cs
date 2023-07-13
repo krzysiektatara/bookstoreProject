@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using BookStoreApplicationAPI.Data;
-using Microsoft.OpenApi.Models;
-using BookStoreApplicationAPI.Repositories.Interfaces;
-using BookStoreApplicationAPI.DAL;
-using BookStoreApplicationAPI.DAL.UOW;
-using BookStoreApplicationAPI.Data.Infrastructure;
-using BookStoreApplicationAPI.Filters;
+﻿using BookStoreApplicationAPI.DAL;
 using BookStoreApplicationAPI.DAL.Services;
+using BookStoreApplicationAPI.DAL.UOW;
+using BookStoreApplicationAPI.Data;
+using BookStoreApplicationAPI.Data.Infrastructure;
 using BookStoreApplicationAPI.Data.Models;
+using BookStoreApplicationAPI.Filters;
+using BookStoreApplicationAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -41,9 +42,23 @@ builder.Services.AddDbContext<BookStoreDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookStoreApplicationContext") ?? throw new InvalidOperationException("Connection string 'BookStoreApplicationAPIContext' not found.")));
 
 builder.Services.AddControllers();
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(option =>
+            {
+                option.LoginPath = "/api/Access";
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+            });
+builder.Services.AddAuthorization(builder =>
+{
+    builder.AddPolicy("policyAdmin", pb => pb
+    .RequireRole("Admin"));
+});
+
 //builder.Services.AddLogging(options =>
 //    options.AddDebug(builder.Configuration.AddConfiguration("Default"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
@@ -62,9 +77,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Access}/{action=Login}/{id?}");
+
+app.MapControllers().RequireAuthorization("policyAdmin");
 
 app.Run();
 
